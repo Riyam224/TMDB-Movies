@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/core/routing/app_routes.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
-import 'movies_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -34,10 +33,7 @@ class _SplashPageState extends State<SplashPage>
     // Auto navigation
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MoviesPage()),
-        );
+        GoRouter.of(context).go(AppRoutes.moviesList);
       }
     });
   }

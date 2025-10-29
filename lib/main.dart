@@ -4,6 +4,7 @@ import 'package:movies_app/core/routing/generated_routes.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
 import 'package:movies_app/features/movies/data/models/movie_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,12 @@ void main() async {
   Hive.registerAdapter(MovieModelAdapter()); // ✅ register your Hive model
   await initServiceLocator();
 
-  runApp(const MoviesApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => sl<ThemeProvider>(), // ✅ from GetIt
+      child: const MoviesApp(),
+    ),
+  );
 }
 
 class MoviesApp extends StatelessWidget {
