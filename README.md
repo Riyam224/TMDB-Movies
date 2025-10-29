@@ -16,6 +16,7 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 ## Screenshots
 
 ### Splash Screen
+
 <p align="center">
   <img src="screenshots/splash_light.png" width="250" alt="Splash Light"/>
   <img src="screenshots/splash_dark.png" width="250" alt="Splash Dark"/>
@@ -23,6 +24,7 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 </p>
 
 ### Movies List
+
 <p align="center">
   <img src="screenshots/movies_light_theme.png" width="250" alt="Movies Light"/>
   <img src="screenshots/movies_dark_theme.png" width="250" alt="Movies Dark"/>
@@ -30,6 +32,7 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 </p>
 
 ### Movie Details
+
 <p align="center">
   <img src="screenshots/movie_details_light_theme.png" width="250" alt="Details Light"/>
   <img src="screenshots/movie_details_dark_theme.png" width="250" alt="Details Dark"/>
@@ -39,9 +42,11 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 ## Demo
 
 ### With WiFi Connection
+
 ![App Demo with WiFi](screenshots/demo_wifi_on.gif)
 
 ### Without WiFi Connection (Offline Mode)
+
 ![App Demo without WiFi](screenshots/demo_wifi_off.gif)
 
 ## Architecture
@@ -98,6 +103,7 @@ The app uses **BLoC pattern with Cubit** for state management:
 - **ThemeProvider**: Manages theme switching using Provider
 
 ### State Classes
+
 - `MovieInitial` - Initial state
 - `MovieLoading` - Loading indicator
 - `MovieLoaded` - Data successfully loaded
@@ -106,12 +112,14 @@ The app uses **BLoC pattern with Cubit** for state management:
 ## Key Features Implementation
 
 ### 1. Splash Screen
+
 - Animated fade-in effect
 - Auto-navigation after 20 seconds
 - Theme switcher
 - Skip functionality
 
 ### 2. Movies List Page
+
 - Grid display of popular movies
 - Movie poster with caching
 - Star rating display
@@ -121,6 +129,7 @@ The app uses **BLoC pattern with Cubit** for state management:
 - Pull-to-refresh functionality
 
 ### 3. Movie Details Page
+
 - Hero animation for poster images
 - Comprehensive movie information:
   - High-resolution poster
@@ -134,6 +143,7 @@ The app uses **BLoC pattern with Cubit** for state management:
 - Offline support
 
 ### 4. Offline-First Architecture
+
 - **Hive** local database for caching
 - First page of movies cached automatically
 - Connectivity checking before API calls
@@ -141,19 +151,23 @@ The app uses **BLoC pattern with Cubit** for state management:
 - User alerts for network issues
 
 ### 5. Theme System
+
 Three beautiful themes to choose from:
 
 #### Light Theme
+
 - Primary: Orange (#F4813F)
 - Secondary: Navy (#11224E)
 - Background: White
 
 #### Dark Theme
+
 - Primary: Navy (#11224E)
 - Secondary: Orange (#F4813F)
 - Background: Dark
 
 #### Custom Pastel Theme
+
 - Primary: Blush Pink (#FFA4A4)
 - Secondary: Mint Green (#36CBC4)
 - Background: Cream (#FCF9EA)
@@ -162,6 +176,7 @@ Three beautiful themes to choose from:
 ## Dependencies
 
 ### Core Dependencies
+
 ```yaml
 dependencies:
   flutter:
@@ -223,6 +238,7 @@ The app integrates with **The Movie Database (TMDB) API**:
   - `GET /movie/{movie_id}` - Fetch movie details
 
 ### API Configuration
+
 ```dart
 // lib/core/network/dio_client.dart
 - 15-second connection timeout
@@ -236,16 +252,19 @@ The app integrates with **The Movie Database (TMDB) API**:
 Comprehensive error handling with custom exceptions and failures:
 
 ### Exceptions
+
 - `ServerException` - API server errors
 - `CacheException` - Local storage errors
 - `NetworkException` - Connectivity issues
 
 ### Failures
+
 - `ServerFailure` - Displayed as user-friendly messages
 - `CacheFailure` - Fallback to cache or error UI
 - `NetworkFailure` - Network error alerts
 
 ### Error UI
+
 - Retry buttons on error screens
 - Alert dialogs for network issues
 - Placeholder images for missing posters
@@ -279,6 +298,7 @@ Comprehensive error handling with custom exceptions and failures:
 ## Getting Started
 
 ### Prerequisites
+
 - Flutter SDK (^3.9.2)
 - Dart SDK
 - TMDB API Key
@@ -286,17 +306,20 @@ Comprehensive error handling with custom exceptions and failures:
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd movies_app
 ```
 
 2. Install dependencies:
+
 ```bash
 flutter pub get
 ```
 
 3. Generate code for Hive, JSON serialization, and Retrofit:
+
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
@@ -306,6 +329,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
    - Replace `YOUR_API_KEY` with your actual TMDB API key
 
 5. Run the app:
+
 ```bash
 flutter run
 ```
@@ -313,6 +337,7 @@ flutter run
 ## Project Structure Details
 
 ### Data Models
+
 - **MovieModel**: Hive-serializable model for caching
   - Fields: id, title, overview, posterPath, voteAverage, genreIds
   - Annotations: `@HiveType`, `@JsonSerializable`
@@ -321,12 +346,14 @@ flutter run
   - Additional fields: backdropPath, releaseDate, runtime, genres
 
 ### Caching Strategy
+
 - Page 1 of popular movies cached automatically
 - Cache-first approach for offline support
 - Cache invalidation on pull-to-refresh
 - Hive box named: `movies_box`
 
 ### Image Handling
+
 - Base URL: `https://image.tmdb.org/t/p/`
 - Poster size: `w500`
 - Backdrop size: `original`
@@ -334,7 +361,9 @@ flutter run
 - Cached using `CachedNetworkImage`
 
 ### Genre Mapping
+
 Hard-coded genre ID to name mapping (19 genres):
+
 - Action, Adventure, Animation, Comedy, Crime
 - Documentary, Drama, Family, Fantasy, History
 - Horror, Music, Mystery, Romance, Science Fiction
@@ -343,6 +372,7 @@ Hard-coded genre ID to name mapping (19 genres):
 ## Logic Implementation
 
 ### Pagination Logic
+
 ```dart
 // MovieCubit handles pagination
 1. Load initial page (page 1)
@@ -354,6 +384,7 @@ Hard-coded genre ID to name mapping (19 genres):
 ```
 
 ### Theme Switching Logic
+
 ```dart
 // ThemeProvider with ChangeNotifier
 1. User clicks theme button
@@ -364,6 +395,7 @@ Hard-coded genre ID to name mapping (19 genres):
 ```
 
 ### Offline Detection Logic
+
 ```dart
 // NetworkHelper checks connectivity
 1. Before API call, check NetworkHelper.hasConnection()
@@ -377,6 +409,7 @@ Hard-coded genre ID to name mapping (19 genres):
 ## Testing
 
 The project structure supports testing at multiple levels:
+
 - Unit tests for Cubits and Repositories
 - Widget tests for UI components
 - Integration tests for complete flows
@@ -384,6 +417,7 @@ The project structure supports testing at multiple levels:
 ## Future Enhancements
 
 Potential features to add:
+
 - [ ] Search functionality
 - [ ] Movie categories (Top Rated, Upcoming, Now Playing)
 - [ ] Favorites/Watchlist
@@ -397,6 +431,7 @@ Potential features to add:
 ## Learning Outcomes
 
 This project demonstrates:
+
 - Clean Architecture implementation in Flutter
 - BLoC pattern with Cubit for state management
 - API integration with Retrofit and Dio
@@ -411,7 +446,7 @@ This project demonstrates:
 
 ## Contributing
 
-This is a learning project for Flutter Mentorship Week 7. Feel free to fork and experiment!
+This is a learning project for Flutter Mentorship Week 6. Feel free to fork and experiment!
 
 ## License
 
