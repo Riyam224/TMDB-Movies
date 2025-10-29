@@ -1,3 +1,4 @@
+// todo
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +34,6 @@ class MovieDetailsPage extends StatelessWidget {
                         tag: "poster_${movie.id}",
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          // todo cache image
                           child: CachedNetworkImage(
                             imageUrl:
                                 '${MyConstants.imageBaseUrl}${movie.posterPath}',
@@ -109,11 +109,42 @@ class MovieDetailsPage extends StatelessWidget {
                     ],
                   ),
                 );
+
+              /// ✅ Clean friendly message instead of raw Dio error
               case MovieDetailsError(message: final msg):
                 return Center(
-                  child: Text(
-                    "⚠️ $msg",
-                    style: const TextStyle(color: Colors.redAccent),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.wifi_off,
+                        size: 70,
+                        color: Colors.orange,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Connection Error 😕",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        msg,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 20),
+                      FilledButton(
+                        onPressed: () {
+                          context.read<MovieDetailsCubit>().loadMovieDetails(
+                            movieId,
+                          );
+                        },
+                        child: const Text("Retry"),
+                      ),
+                    ],
                   ),
                 );
             }

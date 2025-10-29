@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movies_app/core/constants/api_constants.dart';
-
 import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/core/routing/app_routes.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
@@ -18,8 +17,6 @@ class MoviesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo
-
     return BlocProvider(
       create: (_) => sl<MovieCubit>()..loadMovies(),
       child: Scaffold(
@@ -41,23 +38,18 @@ class MoviesPage extends StatelessWidget {
             ],
           ),
           centerTitle: true,
-
-          // 🌈 Theme toggle icon
           actions: [
             Builder(
               builder: (context) {
                 final themeProvider = sl<ThemeProvider>();
-                final theme = themeProvider.currentTheme;
-
                 IconData themeIcon;
                 if (themeProvider.isLight) {
-                  themeIcon = Icons.dark_mode_outlined; // switch to dark
+                  themeIcon = Icons.dark_mode_outlined;
                 } else if (themeProvider.isDark) {
-                  themeIcon = Icons.color_lens_outlined; // switch to custom
+                  themeIcon = Icons.color_lens_outlined;
                 } else {
-                  themeIcon = Icons.light_mode_outlined; // switch to light
+                  themeIcon = Icons.light_mode_outlined;
                 }
-
                 return IconButton(
                   icon: Icon(themeIcon, color: Colors.cyan),
                   tooltip: 'Change Theme',
@@ -102,14 +94,14 @@ class MoviesPage extends StatelessWidget {
                         return InkWell(
                           borderRadius: BorderRadius.circular(16),
 
-                          // todo show dialog when offline
+                          /// ✅ OFFLINE CHECK + ALERT DIALOG
                           onTap: () async {
                             final hasInternet =
                                 await NetworkHelper.hasConnection();
 
                             if (!hasInternet) {
                               if (!context.mounted) return;
-                              await showDialog(
+                              showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
                                   backgroundColor: const Color(0xFFFFE0E0),
@@ -135,6 +127,7 @@ class MoviesPage extends StatelessWidget {
                                         'OK',
                                         style: TextStyle(
                                           color: Color(0xFFF4813F),
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -149,6 +142,7 @@ class MoviesPage extends StatelessWidget {
                               );
                             }
                           },
+
                           child: Container(
                             decoration: BoxDecoration(
                               color: Theme.of(
@@ -159,7 +153,7 @@ class MoviesPage extends StatelessWidget {
                             padding: const EdgeInsets.all(12),
                             child: Row(
                               children: [
-                                //todo  Poster
+                                /// 🎬 Poster
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: CachedNetworkImage(
@@ -169,7 +163,6 @@ class MoviesPage extends StatelessWidget {
                                     width: 70,
                                     height: 100,
                                     fit: BoxFit.cover,
-
                                     placeholder: (context, url) => Container(
                                       width: 70,
                                       height: 100,
@@ -184,7 +177,6 @@ class MoviesPage extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-
                                     errorWidget: (context, url, error) =>
                                         Container(
                                           width: 70,
@@ -197,10 +189,9 @@ class MoviesPage extends StatelessWidget {
                                         ),
                                   ),
                                 ),
-                                // todo
                                 const SizedBox(width: 12),
 
-                                // Info
+                                /// 🎞 Info
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -256,7 +247,6 @@ class MoviesPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-
                                 const Icon(
                                   Icons.chevron_right,
                                   color: Colors.grey,
@@ -269,7 +259,7 @@ class MoviesPage extends StatelessWidget {
                     ),
                   ),
 
-                  // 🔹 Pagination Button
+                  /// 🔹 Pagination Button
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(

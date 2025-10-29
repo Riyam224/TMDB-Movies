@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage>
     _controller.forward();
 
     // Auto navigation
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 20), () {
       if (mounted) {
         GoRouter.of(context).go(AppRoutes.moviesList);
       }
