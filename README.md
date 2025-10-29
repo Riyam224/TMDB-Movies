@@ -338,8 +338,8 @@ The screenshots above demonstrate:
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd movies_app
+git clone https://github.com/Riyam224/TMDB-Movies.git
+cd TMDB-Movies
 ```
 
 2. Install dependencies:
