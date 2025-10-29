@@ -213,6 +213,9 @@ dependencies:
   path_provider: ^2.1.5          # File system paths
   pretty_dio_logger: ^1.3.1      # HTTP logging
 
+  # Error Tracking
+  sentry_flutter: ^8.10.0        # Error monitoring and crash reporting
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -269,6 +272,33 @@ Comprehensive error handling with custom exceptions and failures:
 - Alert dialogs for network issues
 - Placeholder images for missing posters
 - Loading states with indicators
+
+### Sentry Integration for Error Tracking
+
+The app integrates **Sentry** for real-time error monitoring and crash reporting:
+
+- **Automatic error capture** - All uncaught exceptions are automatically reported to Sentry
+- **Custom error tracking** - Manual error reporting for specific scenarios
+- **Performance monitoring** - Track app performance and identify bottlenecks
+- **Release tracking** - Monitor errors across different app versions
+- **User context** - Additional context to help debug issues
+
+#### Sentry Screenshots
+
+<p align="center">
+  <img src="screenshots/test_sentry_with_errors.png" width="400" alt="Sentry Dashboard - Error List"/>
+  <img src="screenshots/test_sentry_with_errorss.png" width="400" alt="Sentry Dashboard - Error Details"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/after_fix_the_error.png" width="400" alt="Sentry Dashboard - After Fix"/>
+</p>
+
+The screenshots above demonstrate:
+
+1. **Error List View** - Shows all captured exceptions in the Sentry dashboard
+2. **Error Details View** - Detailed stack trace and context for debugging
+3. **After Fix View** - Monitoring dashboard after resolving the reported errors
 
 ## Routing
 
