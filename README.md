@@ -41,6 +41,10 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 
 ## Demo
 
+### App Demo
+
+![App Demo](screenshots/demo.gif)
+
 ### With WiFi Connection
 
 ![App Demo with WiFi](screenshots/demo_wifi_on.gif)
@@ -48,6 +52,14 @@ A feature-rich Flutter application that showcases popular movies using The Movie
 ### Without WiFi Connection (Offline Mode)
 
 ![App Demo without WiFi](screenshots/demo_wifi_off.gif)
+
+### Movies List - Offline Mode
+
+<p align="center">
+  <img src="screenshots/movies_list_wifi_off.png" width="300" alt="Movies List Offline"/>
+</p>
+
+The screenshot above shows the movies list page when WiFi is turned off, demonstrating the offline-first caching functionality where previously loaded movies are still accessible.
 
 ## Architecture
 
@@ -67,7 +79,10 @@ lib/
 │
 ├── features/movies/               # Movies feature module
 │   ├── data/
-│   │   ├── datasources/           # API service & cache manager
+│   │   ├── datasources/           # API service & cache managers
+│   │   │   ├── movie_api_service.dart
+│   │   │   ├── movie_cache_manager.dart (movies list)
+│   │   │   └── movie_details_cache_manager.dart (movie details)
 │   │   ├── models/                # Data models (Hive + JSON)
 │   │   └── repositories/          # Repository implementation
 │   ├── domain/
@@ -91,8 +106,16 @@ Repository Interface
     ↓
 Repository Implementation
     ├─→ Local Cache (Hive)
+    │   ├─→ MovieCacheManager (movies list)
+    │   └─→ MovieDetailsCacheManager (movie details)
     └─→ Remote API (Retrofit + Dio)
 ```
+
+**Cache-First Strategy:**
+- Repository checks cache before making API calls
+- If data exists in cache, return immediately
+- If cache miss, fetch from API and cache the result
+- Provides offline support and improves performance
 
 ## State Management
 
@@ -140,7 +163,53 @@ The app uses **BLoC pattern with Cubit** for state management:
   - Genre list
   - Backdrop image
 - Error handling with retry button
-- Offline support
+- Offline support with intelligent caching
+- **Cache-first architecture** for instant loading
+
+#### Movie Details Caching Implementation
+
+The movie details page features a sophisticated caching system that provides offline-first functionality:
+
+**Features:**
+- Each movie's details are cached individually after first load
+- Cache-first approach: Always checks local cache before making API calls
+- Instant loading for previously viewed movies
+- Persistent storage using Hive database
+- Automatic cache updates when fetching from API
+
+**Implementation Details:**
+
+1. **MovieDetailsCacheManager** ([lib/features/movies/data/datasources/movie_details_cache_manager.dart](lib/features/movies/data/datasources/movie_details_cache_manager.dart))
+   - Dedicated Hive box (`movie_details_box`) for storing movie details
+   - Key-value storage using movie ID as the key
+   - Methods for caching, retrieving, and checking cache status
+
+2. **Enhanced MovieDetailsResponse Model** ([lib/features/movies/data/models/movie_details_response.dart](lib/features/movies/data/models/movie_details_response.dart))
+   - Added `@HiveType` annotation for Hive serialization
+   - All fields annotated with `@HiveField` for proper storage
+   - Includes nested `GenreModel` caching support
+
+3. **Repository Integration** ([lib/features/movies/data/repositories/movie_repository_impl.dart](lib/features/movies/data/repositories/movie_repository_impl.dart))
+   - Cache-first flow: Check cache → If found, return instantly → If not, fetch from API → Cache result
+   - Transparent caching that doesn't affect the UI layer
+   - Automatic error recovery using cached data
+
+**Benefits:**
+- Faster load times for revisited movies
+- Reduced API calls and bandwidth usage
+- Full offline support for previously viewed content
+- Better user experience with instant content display
+
+#### Screenshots: Cached vs Non-Cached
+
+<p align="center">
+  <img src="screenshots/movie_details_cached_.png" width="300" alt="Movie Details - Cached (Instant Load)"/>
+  <img src="screenshots/movie_details_not_cached.png" width="300" alt="Movie Details - Not Cached (API Load)"/>
+</p>
+
+The screenshots above demonstrate:
+- **Left**: Movie details loaded instantly from cache (notice the fast response)
+- **Right**: Movie details loaded from API (first time viewing)
 
 ### 4. Offline-First Architecture
 
@@ -318,12 +387,15 @@ The screenshots above demonstrate:
 // Registered Services:
 - Dio (HTTP client)
 - MovieApiService (Retrofit API)
-- MovieCacheManager (Hive cache)
+- MovieCacheManager (Hive cache for movies list)
+- MovieDetailsCacheManager (Hive cache for movie details)
 - MovieRepository (Data repository)
 - MovieCubit (Factory)
 - MovieDetailsCubit (Factory)
 - ThemeProvider (Lazy singleton)
 ```
+
+All services are properly registered in [lib/core/di/service_locator.dart](lib/core/di/service_locator.dart) and injected where needed using GetIt's service locator pattern.
 
 ## Getting Started
 
@@ -377,10 +449,32 @@ flutter run
 
 ### Caching Strategy
 
+The app implements a comprehensive two-tier caching system:
+
+#### Movies List Caching
 - Page 1 of popular movies cached automatically
 - Cache-first approach for offline support
 - Cache invalidation on pull-to-refresh
-- Hive box named: `movies_box`
+- Hive box: `movies_box`
+
+#### Movie Details Caching (NEW)
+- Individual movie details cached after first view
+- Persistent cache using Hive database
+- Cache-first flow for instant loading
+- Hive box: `movie_details_box`
+- Each movie stored with its ID as key
+- Includes all movie information (poster, backdrop, genres, runtime, etc.)
+- Automatic updates when fetching new data from API
+
+**Caching Flow:**
+1. User requests movie details
+2. Check local cache first (`MovieDetailsCacheManager`)
+3. If cached, return instantly (no API call)
+4. If not cached, fetch from TMDB API
+5. Cache the response for future use
+6. Display to user
+
+This approach significantly reduces API calls, improves app performance, and enables full offline functionality for previously viewed content.
 
 ### Image Handling
 
@@ -465,14 +559,27 @@ This project demonstrates:
 - Clean Architecture implementation in Flutter
 - BLoC pattern with Cubit for state management
 - API integration with Retrofit and Dio
-- Local caching with Hive
-- Offline-first app architecture
+- Local caching with Hive (two-tier caching system)
+- Offline-first app architecture with cache-first strategy
+- Individual item caching (movie details) for optimal performance
 - Dependency injection with GetIt
 - Declarative routing with GoRouter
 - Custom theming system
 - Error handling patterns
 - Image optimization and caching
 - Network connectivity handling
+- Hive type adapters and code generation
+
+### New Implementation (Week 7): Movie Details Caching
+
+This week added a sophisticated movie details caching system:
+
+- **MovieDetailsCacheManager**: Dedicated cache manager for individual movie details
+- **Enhanced Model Serialization**: Added Hive annotations to MovieDetailsResponse and GenreModel
+- **Cache-First Flow**: Repository checks cache before API calls
+- **Performance Optimization**: Instant loading for previously viewed movies
+- **Reduced API Usage**: Minimizes network calls and bandwidth consumption
+- **Full Offline Support**: Complete movie details available offline after first view
 
 ## Contributing
 

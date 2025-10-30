@@ -1,8 +1,8 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:movies_app/core/error/failures.dart';
 import 'package:movies_app/features/movies/data/datasources/movie_api_service.dart';
 import 'package:movies_app/features/movies/data/datasources/movie_cache_manager.dart';
+import 'package:movies_app/features/movies/data/datasources/movie_details_cache_manager.dart';
 import 'package:movies_app/features/movies/data/models/movie_details_response.dart';
 import 'package:movies_app/features/movies/data/models/movie_model.dart';
 import 'package:movies_app/features/movies/domain/entities/movie_entity.dart';
@@ -13,8 +13,13 @@ import 'package:movies_app/features/movies/data/models/movie_response.dart';
 class MovieRepositoryImpl implements MovieRepository {
   final MovieApiService apiService;
   final MovieCacheManager cacheManager;
+  final MovieDetailsCacheManager detailsCacheManager;
 
-  MovieRepositoryImpl(this.apiService, this.cacheManager);
+  MovieRepositoryImpl(
+    this.apiService,
+    this.cacheManager,
+    this.detailsCacheManager,
+  );
 
   int currentPage = 1;
 
@@ -51,10 +56,34 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   /// 🎥 Fetch single movie details
+  // @override
+  // Future<Either<Failure, MovieDetailsEntity>> getMovieDetails(int id) async {
+  //   try {
+  //     final MovieDetailsResponse details = await apiService.getMovieDetails(id);
+  //     return Right(details.toEntity());
+  //   } catch (e) {
+  //     print('❌ Error fetching movie details: $e');
+  //     return Left(ServerFailure(e.toString()));
+  //   }
+  // }
+
   @override
   Future<Either<Failure, MovieDetailsEntity>> getMovieDetails(int id) async {
     try {
+      // 1️⃣ Try to get from cache first
+      final cached = await detailsCacheManager.getCachedMovieDetails(id);
+      if (cached != null) {
+        print('📦 Loaded cached details for movie $id');
+        return Right(cached.toEntity());
+      }
+
+      // 2️⃣ Fetch from API using Retrofit
       final MovieDetailsResponse details = await apiService.getMovieDetails(id);
+
+      // 3️⃣ Cache the details
+      await detailsCacheManager.cacheMovieDetails(details);
+
+      print('🌐 API returned details for movie $id');
       return Right(details.toEntity());
     } catch (e) {
       print('❌ Error fetching movie details: $e');

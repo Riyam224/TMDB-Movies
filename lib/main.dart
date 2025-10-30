@@ -3,6 +3,7 @@ import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/core/routing/generated_routes.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
 import 'package:movies_app/features/movies/data/models/movie_model.dart';
+import 'package:movies_app/features/movies/data/models/movie_details_response.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -12,7 +13,9 @@ void main() async {
   // ✅ Initialize Hive
   await Hive.initFlutter();
   // ✅ Register adapters (after creating them)
-  Hive.registerAdapter(MovieModelAdapter()); // ✅ register your Hive model
+  Hive.registerAdapter(MovieModelAdapter());
+  Hive.registerAdapter(MovieDetailsResponseAdapter());
+  Hive.registerAdapter(GenreModelAdapter());
   await initServiceLocator();
 
   await SentryFlutter.init(

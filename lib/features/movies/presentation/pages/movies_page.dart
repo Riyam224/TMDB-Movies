@@ -8,7 +8,6 @@ import 'package:movies_app/core/constants/api_constants.dart';
 import 'package:movies_app/core/di/service_locator.dart';
 import 'package:movies_app/core/routing/app_routes.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
-import 'package:movies_app/core/utils/network_helper.dart';
 import 'package:movies_app/features/movies/presentation/cubit/movie_cubit.dart';
 import 'package:movies_app/features/movies/presentation/cubit/movie_state.dart';
 
@@ -94,53 +93,12 @@ class MoviesPage extends StatelessWidget {
                         return InkWell(
                           borderRadius: BorderRadius.circular(16),
 
-                          /// ✅ OFFLINE CHECK + ALERT DIALOG
-                          onTap: () async {
-                            final hasInternet =
-                                await NetworkHelper.hasConnection();
-
-                            if (!hasInternet) {
-                              if (!context.mounted) return;
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: const Color(0xFFFFE0E0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  title: const Text(
-                                    '⚠️ You’re Offline',
-                                    style: TextStyle(
-                                      color: Color(0xFF11224E),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  content: const Text(
-                                    'Please turn on Wi-Fi or mobile data to view movie details.',
-                                    style: TextStyle(color: Color(0xFF11224E)),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text(
-                                        'OK',
-                                        style: TextStyle(
-                                          color: Color(0xFFF4813F),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              if (!context.mounted) return;
-                              context.pushNamed(
-                                AppRoutes.moviesDetails,
-                                pathParameters: {'id': movie.id.toString()},
-                              );
-                            }
+                          /// Navigate to movie details - let repository handle offline/cache logic
+                          onTap: () {
+                            context.pushNamed(
+                              AppRoutes.moviesDetails,
+                              pathParameters: {'id': movie.id.toString()},
+                            );
                           },
 
                           child: Container(

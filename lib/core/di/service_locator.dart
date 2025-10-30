@@ -4,6 +4,7 @@ import 'package:movies_app/core/network/dio_client.dart';
 import 'package:movies_app/core/theme/theme_provider.dart';
 import 'package:movies_app/features/movies/data/datasources/movie_api_service.dart';
 import 'package:movies_app/features/movies/data/datasources/movie_cache_manager.dart';
+import 'package:movies_app/features/movies/data/datasources/movie_details_cache_manager.dart';
 import 'package:movies_app/features/movies/data/repositories/movie_repository_impl.dart';
 import 'package:movies_app/features/movies/domain/repositories/movie_repository.dart';
 import 'package:movies_app/features/movies/presentation/cubit/movie_cubit.dart';
@@ -21,9 +22,17 @@ Future<void> initServiceLocator() async {
   // 3️⃣ Cache Manager
   sl.registerLazySingleton<MovieCacheManager>(() => MovieCacheManager());
 
+  sl.registerLazySingleton<MovieDetailsCacheManager>(
+    () => MovieDetailsCacheManager(),
+  );
+
   // 4️⃣ Repository (registered via interface)
   sl.registerLazySingleton<MovieRepository>(
-    () => MovieRepositoryImpl(sl<MovieApiService>(), sl<MovieCacheManager>()),
+    () => MovieRepositoryImpl(
+      sl<MovieApiService>(),
+      sl<MovieCacheManager>(),
+      sl<MovieDetailsCacheManager>(),
+    ),
   );
 
   // 5️⃣ Cubits
