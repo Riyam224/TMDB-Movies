@@ -55,18 +55,6 @@ class MovieRepositoryImpl implements MovieRepository {
     }
   }
 
-  /// 🎥 Fetch single movie details
-  // @override
-  // Future<Either<Failure, MovieDetailsEntity>> getMovieDetails(int id) async {
-  //   try {
-  //     final MovieDetailsResponse details = await apiService.getMovieDetails(id);
-  //     return Right(details.toEntity());
-  //   } catch (e) {
-  //     print('❌ Error fetching movie details: $e');
-  //     return Left(ServerFailure(e.toString()));
-  //   }
-  // }
-
   @override
   Future<Either<Failure, MovieDetailsEntity>> getMovieDetails(int id) async {
     try {
