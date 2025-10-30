@@ -1,5 +1,3 @@
-
-
 import 'package:json_annotation/json_annotation.dart';
 import 'movie_model.dart';
 
@@ -8,7 +6,7 @@ part 'movie_response.g.dart';
 @JsonSerializable()
 class MovieResponse {
   final int page;
-  final List<MovieModel> results; // ✅ your list of movies
+  final List<MovieModel> results;
 
   MovieResponse({required this.page, required this.results});
 
