@@ -63,7 +63,7 @@ class _SplashPageState extends State<SplashPage>
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: FadeTransition(
         opacity: _fadeIn,
         child: Center(
@@ -72,21 +72,21 @@ class _SplashPageState extends State<SplashPage>
             children: [
               Icon(
                 Icons.movie_creation_outlined,
-                color: colorScheme.onBackground,
+                color: colorScheme.onSurface,
                 size: 90,
               ),
               const SizedBox(height: 20),
               Text(
                 "Movies App",
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  color: colorScheme.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 "by Riyam 🌸",
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: colorScheme.onBackground.withOpacity(0.7),
+                  color: colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],

@@ -493,6 +493,26 @@ Hard-coded genre ID to name mapping (19 genres):
 - Horror, Music, Mystery, Romance, Science Fiction
 - TV Movie, Thriller, War, Western
 
+#### Genre Names Getter
+
+Both `MovieModel` and `MovieEntity` include a computed `genreNames` getter that converts genre IDs to readable genre names:
+
+```dart
+// Usage
+List<int> genreIds = [28, 35, 12];  // Action, Comedy, Adventure
+List<String> genreNames = movie.genreNames;  // ['Action', 'Comedy', 'Adventure']
+```
+
+**Implementation:**
+- [lib/features/movies/data/models/movie_model.dart](lib/features/movies/data/models/movie_model.dart#L45-L70)
+- [lib/features/movies/domain/entities/movie_entity.dart](lib/features/movies/domain/entities/movie_entity.dart#L18-L43)
+
+**Features:**
+- Automatic conversion from genre IDs to genre names
+- Returns 'Unknown' for unrecognized genre IDs
+- Consistent implementation across data and domain layers
+- No additional API calls required
+
 ## Logic Implementation
 
 ### Pagination Logic
@@ -580,6 +600,46 @@ This week added a sophisticated movie details caching system:
 - **Performance Optimization**: Instant loading for previously viewed movies
 - **Reduced API Usage**: Minimizes network calls and bandwidth consumption
 - **Full Offline Support**: Complete movie details available offline after first view
+
+### Recent Updates: Code Fixes and Improvements
+
+#### 1. Genre Names Getter Implementation
+
+Added a `genreNames` getter to `MovieModel` for convenient genre ID to name conversion:
+
+- **Location**: [lib/features/movies/data/models/movie_model.dart:45-70](lib/features/movies/data/models/movie_model.dart#L45-L70)
+- **Feature**: Automatically converts genre IDs (e.g., `[28, 35]`) to readable names (e.g., `['Action', 'Comedy']`)
+- **Benefit**: Eliminates need for manual genre mapping in UI layer
+- **Consistency**: Matches implementation in `MovieEntity` for consistent behavior across layers
+
+#### 2. Connectivity API Update
+
+Fixed compatibility with the latest `connectivity_plus` package:
+
+- **File**: [lib/core/utils/network_helper.dart:6](lib/core/utils/network_helper.dart#L6)
+- **Change**: Updated from `result != ConnectivityResult.none` to `!result.contains(ConnectivityResult.none)`
+- **Reason**: The newer version of `connectivity_plus` returns `List<ConnectivityResult>` instead of a single value
+- **Impact**: Resolves type mismatch error and ensures proper network detection
+
+#### 3. Material 3 Deprecation Fixes
+
+Updated deprecated Material Design 3 color scheme properties in Splash Page:
+
+- **File**: [lib/features/movies/presentation/pages/splash_page.dart](lib/features/movies/presentation/pages/splash_page.dart)
+- **Changes**:
+  - `colorScheme.background` → `colorScheme.surface` (line 66)
+  - `colorScheme.onBackground` → `colorScheme.onSurface` (lines 75, 82, 89)
+  - `withOpacity(0.7)` → `withValues(alpha: 0.7)` (line 89)
+- **Benefit**: Ensures compatibility with Flutter 3.9+ and Material Design 3 specifications
+- **Impact**: Removes all deprecation warnings related to color scheme
+
+#### 4. Code Generation
+
+Successfully ran `build_runner` to regenerate all necessary files:
+
+- Generated 828 outputs from Hive, JSON, and Retrofit annotations
+- All model serialization code updated
+- API service code regenerated with latest configurations
 
 ## Contributing
 
