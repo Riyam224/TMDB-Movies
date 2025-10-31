@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dartz/dartz.dart';
 import 'package:movies_app/core/error/failures.dart';
 import 'package:movies_app/features/movies/data/datasources/movie_api_service.dart';
@@ -29,7 +31,7 @@ class MovieRepositoryImpl implements MovieRepository {
     int page = 1,
   }) async {
     try {
-      // 1️⃣ Try to get from cache when requesting first page
+      // 1️ Try to get from cache when requesting first page
       if (page == 1) {
         final cached = await cacheManager.getCachedMovies();
         if (cached.isNotEmpty) {
@@ -38,16 +40,16 @@ class MovieRepositoryImpl implements MovieRepository {
         }
       }
 
-      // 2️⃣ Fetch from API using Retrofit
+      // 2️ Fetch from API using Retrofit
       final MovieResponse response = await apiService.getPopularMovies(page);
       final List<MovieModel> movies = response.results;
 
-      // 3️⃣ Cache first page only
+      // 3️ Cache first page only
       if (page == 1) {
         await cacheManager.cacheMovies(movies);
       }
 
-      print('🌐 API returned ${movies.length} movies (page $page)');
+      print(' API returned ${movies.length} movies (page $page)');
       return Right(movies.map((e) => e.toEntity()).toList());
     } catch (e) {
       print('❌ Error fetching movies: $e');
@@ -58,20 +60,20 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<Either<Failure, MovieDetailsEntity>> getMovieDetails(int id) async {
     try {
-      // 1️⃣ Try to get from cache first
+      // 1️ Try to get from cache first
       final cached = await detailsCacheManager.getCachedMovieDetails(id);
       if (cached != null) {
         print('📦 Loaded cached details for movie $id');
         return Right(cached.toEntity());
       }
 
-      // 2️⃣ Fetch from API using Retrofit
+      // 2️ Fetch from API using Retrofit
       final MovieDetailsResponse details = await apiService.getMovieDetails(id);
 
-      // 3️⃣ Cache the details
+      // 3️ Cache the details
       await detailsCacheManager.cacheMovieDetails(details);
 
-      print('🌐 API returned details for movie $id');
+      print(' API returned details for movie $id');
       return Right(details.toEntity());
     } catch (e) {
       print('❌ Error fetching movie details: $e');

@@ -39,7 +39,7 @@ void main() async {
     appRunner: () => runApp(
       SentryWidget(
         child: ChangeNotifierProvider(
-          create: (_) => sl<ThemeProvider>(), // ✅ from GetIt
+          create: (_) => sl<ThemeProvider>(), // from GetIt
           child: const MoviesApp(),
         ),
       ),
@@ -54,15 +54,15 @@ class MoviesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = sl<ThemeProvider>(); // ✅ from GetIt
+    final themeProvider = sl<ThemeProvider>(); //  from GetIt
 
     return AnimatedBuilder(
       animation: themeProvider,
       builder: (context, _) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: 'TMDB Clean App',
-          theme: themeProvider.currentTheme, // ✅ renamed correctly
+          title: 'TMDB Movies App',
+          theme: themeProvider.currentTheme, // renamed correctly
           routerConfig: RouteGenerator.mainRoutingInOurApp,
         );
       },

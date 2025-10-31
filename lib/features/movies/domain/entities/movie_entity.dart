@@ -15,7 +15,7 @@ class MovieEntity {
     required this.genreIds,
   });
 
-  /// 🧠 Computed getter: convert genre IDs → readable names
+  ///  Computed getter: convert genre IDs → readable names
   List<String> get genreNames {
     final map = {
       28: 'Action',
